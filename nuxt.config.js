@@ -18,6 +18,10 @@ export default {
     ]
   },
 
+  router: {
+    middleware: ['auth']
+  },
+
   // Global CSS (https://go.nuxtjs.dev/config-css)
   css: [
   ],
@@ -39,7 +43,36 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    '@nuxtjs/auth-next'
   ],
+
+  auth: {
+    redirect: {
+      login: '/login',
+      logout: '/login',
+      home: '/'
+    },
+    strategies: {
+      local: {
+        token: {
+          property: 'token',
+          maxAge: 1200,
+          type: 'Bearer'
+        },
+        user: {
+          property: false,
+          autoFetch: true
+        },
+        endpoints: {
+          login: { url: 'https://sync.broodrooster.dev/api/v2/login/user/login', method: 'post' },
+          refresh: false,
+          logout: false,
+          user: {url: 'https://sync.broodrooster.dev/api/v2/login/user/profile', method: 'get' },
+        },
+        // autoLogout: false
+      }
+    }
+  },
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
   axios: {},

@@ -15,8 +15,7 @@
                 <td>Personalize your account with a profile picture</td>
                 <td align="right">
                   <v-avatar>
-                    <img
-                      src="https://avatars.githubusercontent.com/u/23036430"
+                    <img v-bind:src="avatarURL"
                       alt="John"
                     >
                   </v-avatar>
@@ -32,6 +31,7 @@
                   accept="image/*"
                   class="mt-6"
                   truncate-length="30"
+                  @change="onFilePicked"
                 ></v-file-input>
               </v-card-text>
               <v-card-actions>
@@ -53,7 +53,7 @@
                 <v-btn
                   color="primary darken-1"
                   text
-                  @click="dialog = false"
+                  @click="upload"
                 >
                   Upload
                 </v-btn>
@@ -63,19 +63,19 @@
 
           <tr>
             <td class="text--secondary text-caption text-uppercase">Username</td>
-            <td>ZerNico</td>
+            <td>{{ loggedInUser.username }}</td>
             <td align="right">
             </td>
           </tr>
           <tr>
             <td class="text--secondary text-caption text-uppercase">Role</td>
-            <td>User</td>
+            <td>{{ loggedInUser.role }}</td>
             <td align="right">
             </td>
           </tr>
           <tr class="row-pointer">
             <td class="text--secondary text-caption text-uppercase">E-Mail</td>
-            <td>steve@minecraft.com</td>
+            <td>{{ loggedInUser.email }}</td>
             <td align="right">
               <v-icon>mdi-chevron-right</v-icon>
             </td>
@@ -88,6 +88,9 @@
               <v-icon>mdi-chevron-right</v-icon>
             </td>
           </tr>
+          <tr class="row-pointer">
+          <v-btn v-on:click.native="logout()">Logout</v-btn>
+          </tr>
           </tbody>
         </v-simple-table>
       </v-sheet>
@@ -96,18 +99,54 @@
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-import VuetifyLogo from '~/components/VuetifyLogo.vue'
-
+import { mapGetters } from 'vuex'
+import AvatarService from '../services/avatarservice'
 export default {
-  components: {
-    Logo,
-    VuetifyLogo
+  computed: {
+    ...mapGetters(['isAuthenticated', 'loggedInUser']),
   },
+  components: {},
   data() {
     return {
       dialog: false,
+      avatarURL: null,
+      image: null
     }
+  },
+  methods: {
+    async logout(){
+      await this.$auth.logout();
+    },
+
+    onFilePicked(file) {
+      this.image = file;
+      console.log(file);
+    },
+    upload(){
+      if(!this.image){
+        return;
+      }
+      console.log('uploading');
+      AvatarService.upload(this.image, this.$auth.strategy.token.get()).then(
+        () => {
+          this.updateAvatar();
+          this.dialog = false;
+        }
+      );
+    },
+    async updateAvatar(){
+      const response = await fetch('http://127.0.0.1:8000/get/avatar.jpg', {
+        headers: {
+          'Authorization': this.$auth.strategy.token.get()
+        },
+      })
+      if(response.status == 200){
+        this.avatarURL = await response.text();
+      }
+    }
+  },
+  created() {
+      this.updateAvatar();
   }
 }
 </script>
