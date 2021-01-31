@@ -19,6 +19,7 @@
             @click:append="show_password = !show_password"
             outlined
           ></v-text-field>
+          <v-btn v-on:click="passwordReset()">Forgot your password?</v-btn>
           <v-btn
           v-on:click="login()">Login</v-btn>
       </v-form>
@@ -41,10 +42,12 @@ export default {
         async login() {
             try {
             let response = await this.$auth.loginWith('local', { data: {username: this.username, password: this.password} })
-            this.$router.push('/')
         } catch (err) {
             console.log(err)
         }
+        },
+        passwordReset(){
+            this.$router.push('password-forgotten');
         }
     }
 }

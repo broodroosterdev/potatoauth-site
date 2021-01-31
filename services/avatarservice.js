@@ -1,6 +1,6 @@
 class AvatarService {
     async upload(file, token){
-        const urlResponse = await fetch('http://127.0.0.1:8000/put/avatar.jpg',
+        const urlResponse = await fetch('https://sync.broodrooster.dev/api/v2/files/put/avatar.jpg',
         {
             headers: {
                 'Authorization': token
@@ -22,6 +22,20 @@ class AvatarService {
         )
         if(uploadResponse.status == 200){
             console.log('success');
+        }
+    }
+    async delete(token){
+        const urlResponse = await fetch('https://sync.broodrooster.dev/api/v2/files/delete/avatar.jpg',
+        {
+            method: 'DELETE',
+            headers: {
+                'Authorization': token
+              },
+        });
+        if(urlResponse.status == 200){
+            alert('Deleted succesfully');
+        } else {
+            return;
         }
     }
 }

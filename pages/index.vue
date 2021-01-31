@@ -46,7 +46,7 @@
                 <v-btn
                   color="primary darken-1"
                   text
-                  @click="dialog = false"
+                  @click="deleteAvatar"
                 >
                   Delete
                 </v-btn>
@@ -135,7 +135,7 @@ export default {
       );
     },
     async updateAvatar(){
-      const response = await fetch('http://127.0.0.1:8000/get/avatar.jpg', {
+      const response = await fetch('https://sync.broodrooster.dev/api/v2/files/get/avatar.jpg', {
         headers: {
           'Authorization': this.$auth.strategy.token.get()
         },
@@ -143,6 +143,14 @@ export default {
       if(response.status == 200){
         this.avatarURL = await response.text();
       }
+    },
+    deleteAvatar(){
+      AvatarService.delete(this.$auth.strategy.token.get()).then(
+        () => {
+          this.avatarURL = null;
+          this.dialog = false;
+        }
+      )
     }
   },
   created() {
