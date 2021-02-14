@@ -39,12 +39,12 @@ export default {
             try {
                 if(this.username.length > 0){
                     let result = await UserService.sendPasswordReset(this.username);
-                    if(result){
+                    if(result.statusCode == 200){
                         this.error = null;
                         this.success = 'Sent a password reset link';
                     } else {
                         this.success = null;
-                        this.error = 'Could not send a password reset link';
+                        this.error = `Could not send a password reset link: ${await result.text()}`;
                     }
                 }
             } catch (err) {

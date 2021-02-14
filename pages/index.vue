@@ -16,7 +16,7 @@
                 <td align="right">
                   <v-avatar>
                     <img v-bind:src="avatarURL"
-                      alt="John"
+                      alt="The avatar you have choosen"
                     >
                   </v-avatar>
                 </td>

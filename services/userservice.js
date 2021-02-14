@@ -12,7 +12,7 @@ class UserService {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(body),
         });
-        return response.ok;
+        return response;
     }
 }
 
