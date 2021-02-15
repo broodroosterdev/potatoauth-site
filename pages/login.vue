@@ -50,13 +50,14 @@ export default {
         async login() {
             try {
                 let data = null;
-                if(this.username.contains('@')){
+                if(this.username.includes('@')){
                     data = {email: this.username, password: this.password};
                 } else {
                     data = {username: this.username, password: this.password};
                 }
                 let response = await this.$auth.loginWith('local', { data: data });
             } catch (err) {
+                console.log(err);
                 if(err.response.data['username'] != null){
                     if(err.response.data['username'] != 0){
                         this.error = this.matchCode(err.response.data['username'], 'Username');
