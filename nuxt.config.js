@@ -1,10 +1,6 @@
 import colors from 'vuetify/es5/util/colors'
 
 export default {
-
-  router: {
-    base: '/account'
-  },
   // Disable server-side rendering (https://go.nuxtjs.dev/ssr-mode)
   ssr: false,
 
@@ -23,7 +19,8 @@ export default {
   },
 
   router: {
-    middleware: ['auth']
+    middleware: ['auth'],
+    base: '/account'
   },
 
   // Global CSS (https://go.nuxtjs.dev/config-css)
