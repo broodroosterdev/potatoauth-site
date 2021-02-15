@@ -49,7 +49,13 @@ export default {
     methods: {
         async login() {
             try {
-                let response = await this.$auth.loginWith('local', { data: {username: this.username, password: this.password} })
+                let data = null;
+                if(this.username.contains('@')){
+                    data = {email: this.username, password: this.password};
+                } else {
+                    data = {username: this.username, password: this.password};
+                }
+                let response = await this.$auth.loginWith('local', { data: data });
             } catch (err) {
                 if(err.response.data['username'] != null){
                     if(err.response.data['username'] != 0){
